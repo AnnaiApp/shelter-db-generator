@@ -2,7 +2,7 @@
 
 'use strict';
 
-import {copyFile, existsSync, lstatSync, mkdirSync, readdirSync, rmdirSync, unlinkSync} from 'fs';
+import { existsSync, lstatSync, readdirSync, rmdirSync, unlinkSync} from 'fs';
 import Path from 'path';
 import Realm from 'realm';
 import {fileURLToPath} from 'url';
@@ -134,22 +134,6 @@ Promise.all([getJSON(japaneseURL), getJSON(englishURL)])
       });
 
       console.log(`Done loading ${shelters.length} shelters`);
-
-      [
-        Path.join(scriptFolder, '..', 'android', 'app', 'src', 'main', 'assets'),
-        Path.join(scriptFolder, '..', 'ios', 'Annai')
-      ].forEach(assetsFolder => {
-        // Create the asset folder if it doesn't exist
-        mkdirSync(assetsFolder, {recursive: true, mode: 0o755})
-        // Copy the database file to the Android and iOS projects
-        copyFile(Path.join(scriptFolder, `${dbName}.realm`), Path.join(assetsFolder, `${dbName}.realm`), err => {
-          if (err) {
-            console.error(`Couldn't copy ${dbName}.realm to ${assetsFolder}`);
-            return
-          }
-          console.log(`Successfully copied ${dbName}.realm to ${assetsFolder}`)
-        });
-      });
     });
   })
   .catch(error => {
