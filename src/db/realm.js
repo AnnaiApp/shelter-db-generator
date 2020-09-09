@@ -1,15 +1,16 @@
 'use strict';
 
-const { existsSync, lstatSync, readdirSync, rmdirSync, unlinkSync } = require('fs');
 const Path = require('path');
 const Realm = require('realm');
+
+const output = require('../helper/output');
+const { deleteRecursive } = require('./../helper/folder');
 
 const tokyo = require('./../city/tokyo');
 
 const scriptFolder = Path.dirname('/');
-const dbName = 'shelters';
 
-const ShelterSchema = {
+const schema = {
   name: 'Shelter',
   primaryKey: 'id',
   properties: {
@@ -24,62 +25,56 @@ const ShelterSchema = {
   }
 };
 
-function deleteRecursive(path) {
-  if (!existsSync(path)) {
-    return;
-  }
-  if (!lstatSync(path).isDirectory()) {
-    // Delete the file
-    unlinkSync(path);
-    return;
-  }
-  readdirSync(path).forEach((file, index) => {
-    const curPath = Path.join(path, file);
-    if (lstatSync(curPath).isDirectory()) {
-      // Recurse
-      deleteRecursive(curPath);
-    } else {
-      // Delete the file
-      unlinkSync(curPath);
+const build = async (cities) => {
+  output('title', 'Building Realm database');
+
+  // Delete the existing database files, if they exist
+  output('info', 'Deleting previous build files...');
+  [
+    `${process.env.REALM_DB_NAME}.realm`,
+    `${process.env.REALM_DB_NAME}.realm.lock`,
+    `${process.env.REALM_DB_NAME}.realm.note`,
+    `${process.env.REALM_DB_NAME}.realm.management`,
+  ].forEach(file => deleteRecursive(Path.join(scriptFolder, file)));
+  output('info', '...Done');
+
+
+  // List of shelters
+  let shelters = [];
+
+  // For every city, we get the shelters
+  for (const city of cities) {
+    let sheltersNew = [];
+  
+    switch (city) {
+      case 'tokyo':
+        sheltersNew = await tokyo();
     }
-  });
-  rmdirSync(path);
-}
+  
+    shelters = shelters.concat(sheltersNew);
+  }
 
-const realm = async () => {
-    const sheltersTokyo = await tokyo();
-    console.log(sheltersTokyo);
+  // Create the database and fill it with the shelter data
+  Realm.open({
+    path: Path.join(scriptFolder, `${process.env.REALM_DB_NAME}.realm`),
+    schema: [schema]
+  }).then(realm => {
+    return realm.write(() => {
+      output('info', `Processing ${shelters.length} shelters...`);
 
-    const shelters = sheltersTokyo;
-
-    console.log(shelters);
-
-    // Delete the existing database files, if they exist
-    [
-      `${dbName}.realm`,
-      `${dbName}.realm.lock`,
-      `${dbName}.realm.note`,
-      `${dbName}.realm.management`,
-    ].forEach(file => deleteRecursive(Path.join(scriptFolder, file)));
-
-    // Create the database and fill it with the shelter data
-    Realm.open({
-      path: Path.join(scriptFolder, 'shelters.realm'),
-      schema: [ShelterSchema],
-    }).then(realm => {
-      realm.write(() => {
-        console.log(`Start processing ${shelters.length} shelters...`);
-
-        // Populate the database
-        for (const shelter of shelters) {
-          console.log(`Inserting ${shelter.name}...`);
-          realm.create(ShelterSchema.name, shelter, Realm.UpdateMode.Never);
-        }
-      });
-
-      console.log(`Done loading ${shelters.length} shelters`);
+      // Populate the database
+      for (const shelter of shelters) {
+        realm.create(schema.name, shelter, Realm.UpdateMode.Never);
+      }
+      output('info', '...Done');
     });
+  }).then(() => {    
+    output('title', 'Realm database has been built');
+    process.exit(0);
+  });
+};
 
-}
-
-module.exports = realm;
+module.exports = {
+  schema,
+  build
+};

@@ -3,10 +3,9 @@ const getJSON = require('../helper/json-request.js');
 const japaneseURL = 'http://map2.bousai.metro.tokyo.jp/cgi-bin/bousai/pc/searchFacilityInfo.cgi';
 const englishURL = 'http://map2.bousai.metro.tokyo.jp/cgi-bin/bousai/en/pc/searchFacilityInfo.cgi';
 
-function parseShelters(japaneseData, englishData) {
+const parseShelters = (japaneseData, englishData) => {
   // Assuming the data from the Japanese and English CGIs come in the same order
   const count = japaneseData.length;
-  console.log(`Retrieved ${count} shelters`);
 
   let shelters = [];
 
@@ -62,8 +61,6 @@ const tokyo = () => Promise.all([getJSON(japaneseURL), getJSON(englishURL)])
     const shelters = parseShelters(englishJSON.data, japaneseJSON.data);
 
     return shelters;
-
-    // console.log(shelters);
   })
   .catch(error => {
     console.error(`Error when calling ${japaneseURL}: ${error}`);
