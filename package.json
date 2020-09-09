@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "node create-shelter-db.mjs"
+    "build": "node shelter.js "
   },
   "dependencies": {
     "realm": "^6.0.2"

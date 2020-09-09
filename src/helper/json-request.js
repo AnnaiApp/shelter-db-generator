@@ -1,7 +1,7 @@
 'use strict';
 
-import { get as getHTTP } from 'http';
-import { get as getHTTPS } from 'https';
+const { get: getHTTP } = require('http');
+const { get: getHTTPS } = require('https');
 
 function parseResponse(response, resolve, reject) {
     if (response.status >= 400) {
@@ -24,7 +24,7 @@ function parseResponse(response, resolve, reject) {
     });
 }
 
-export default function getJSON(url) {
+function getJSON(url) {
     return new Promise((resolve, reject) => {
         try {
             var parsedURL = new URL(url);
@@ -50,3 +50,5 @@ export default function getJSON(url) {
         }).on('error', reject);
     });
 }
+
+module.exports = getJSON;
