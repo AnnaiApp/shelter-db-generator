@@ -13,7 +13,7 @@ const dbFiles = [
   `${process.env.REALM_DB_BUILD_NAME}.realm`,
   `${process.env.REALM_DB_BUILD_NAME}.realm.lock`,
   `${process.env.REALM_DB_BUILD_NAME}.realm.note`,
-  `${process.env.REALM_DB_BUILD_NAME}.realm.management`,
+  `${process.env.REALM_DB_BUILD_NAME}.realm.management`
 ];
 
 const schema = {
@@ -27,7 +27,7 @@ const schema = {
     subname: 'string',
     address: 'string',
     latitude: 'double',
-    longitude: 'double',
+    longitude: 'double'
   }
 };
 
@@ -36,7 +36,7 @@ const build = async (cities) => {
 
   // Delete the existing database files, if they exist
   output('info', 'Deleting previous build files...');
-  dbFiles.forEach(file => deleteRecursive(Path.join(folder, file)));
+  dbFiles.forEach((file) => deleteRecursive(Path.join(folder, file)));
   output('info', '...Done');
 
   // List of shelters
@@ -58,7 +58,7 @@ const build = async (cities) => {
   Realm.open({
     path: Path.join(folder, dbFiles[0]),
     schema: [schema]
-  }).then(realm => {
+  }).then((realm) => {
     return realm.write(() => {
       output('info', `Processing ${shelters.length} shelters...`);
 

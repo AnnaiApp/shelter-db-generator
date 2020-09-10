@@ -20,7 +20,7 @@ const parseResponse = (response, resolve, reject) => {
       resolve(JSON.parse(body));
     } catch (error) {
       reject(error);
-    };
+    }
   });
 }
 
@@ -34,17 +34,8 @@ const getJSON = (url) => {
 
     const protocol = parsedURL.protocol.slice(0, -1);
 
-    switch (protocol) {
-      case 'http':
-        var get = getHTTP;
-        break;
-      case 'https':
-        var get = getHTTPS;
-        break;
-      default:
-        reject(`Unsupported URL scheme: ${protocol}`)
-        return;
-    }
+    if (protocol !== 'http' && protocol !== 'https') reject(`Unsupported URL scheme: ${protocol}`);
+    const get = protocol === 'http' ? getHTTP : getHTTPS;
 
     get(url, (response) => {
       parseResponse(response, resolve, reject);

@@ -40,7 +40,7 @@ const parseShelters = (japaneseData, englishData) => {
       subname: en.name.trim(),
       address: jp.address.trim(),
       latitude: lat,
-      longitude: lon,
+      longitude: lon
     });
   }
 
@@ -49,11 +49,11 @@ const parseShelters = (japaneseData, englishData) => {
 
 const tokyo = () => Promise.all([getJSON(japaneseURL), getJSON(englishURL)])
   .then(([japaneseJSON, englishJSON]) => {
-    if (!japaneseJSON.hasOwnProperty('data')) {
+    if (!Object.prototype.hasOwnProperty.call(japaneseJSON, 'data')) {
       console.error(`The data from ${japaneseURL} doesn't contain a "data" field: ${JSON.stringify(japaneseJSON)}`);
       process.exit(1);
     }
-    if (!englishJSON.hasOwnProperty('data')) {
+    if (!Object.prototype.hasOwnProperty.call(englishJSON, 'data')) {
       console.error(`The data from ${englishURL} doesn't contain a "data" field: ${JSON.stringify(englishJSON)}`);
       process.exit(1);
     }
@@ -62,7 +62,7 @@ const tokyo = () => Promise.all([getJSON(japaneseURL), getJSON(englishURL)])
 
     return shelters;
   })
-  .catch(error => {
+  .catch((error) => {
     console.error(`Error when calling ${japaneseURL}: ${error}`);
     process.exit(1);
   });

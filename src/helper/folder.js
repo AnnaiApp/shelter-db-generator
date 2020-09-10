@@ -10,7 +10,7 @@ const deleteRecursive = (path) => {
     unlinkSync(path);
     return;
   }
-  readdirSync(path).forEach((file, index) => {
+  readdirSync(path).forEach((file) => {
     const curPath = Path.join(path, file);
     if (lstatSync(curPath).isDirectory()) {
       // Recurse
