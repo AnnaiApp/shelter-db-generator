@@ -67,4 +67,4 @@ const tokyo = () => Promise.all([getJSON(japaneseURL), getJSON(englishURL)])
     process.exit(1);
   });
 
-  module.exports = tokyo;
+module.exports = tokyo;
