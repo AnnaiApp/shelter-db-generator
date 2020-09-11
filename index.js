@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config();
 
 const prompts = require('prompts');
 
@@ -12,6 +12,7 @@ const { build: buildRealm } = require('./src/db/realm');
       message: 'Select cities to include in the database :',
       min: 1,
       choices: [
+        { title: 'Kyoto', value: 'kyoto' },
         { title: 'Tokyo', value: 'tokyo' }
       ]
     },

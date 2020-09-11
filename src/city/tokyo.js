@@ -1,4 +1,4 @@
-const getJSON = require('../helper/json-request.js');
+const request = require('../helper/request.js');
 
 const japaneseURL = 'http://map2.bousai.metro.tokyo.jp/cgi-bin/bousai/pc/searchFacilityInfo.cgi';
 const englishURL = 'http://map2.bousai.metro.tokyo.jp/cgi-bin/bousai/en/pc/searchFacilityInfo.cgi';
@@ -33,7 +33,7 @@ const parseShelters = (japaneseData, englishData) => {
     const lon = parseFloat(jp.lon);
 
     shelters.push({
-      id: i,
+      id: `tokyo-${type}-${i}`,
       type: type,
       code: jp.facility_code.trim(),
       name: jp.name.trim(),
@@ -47,7 +47,7 @@ const parseShelters = (japaneseData, englishData) => {
   return shelters;
 }
 
-const tokyo = () => Promise.all([getJSON(japaneseURL), getJSON(englishURL)])
+const tokyo = () => Promise.all([request(japaneseURL, 'json'), request(englishURL, 'json')])
   .then(([japaneseJSON, englishJSON]) => {
     if (!Object.prototype.hasOwnProperty.call(japaneseJSON, 'data')) {
       console.error(`The data from ${japaneseURL} doesn't contain a "data" field: ${JSON.stringify(japaneseJSON)}`);

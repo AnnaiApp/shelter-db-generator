@@ -9,7 +9,8 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "prompts": "^2.3.2",
-    "realm": "^6.0.2"
+    "realm": "^6.0.2",
+    "xlsx": "^0.16.6"
   },
   "devDependencies": {
     "eslint": "^7.8.1"

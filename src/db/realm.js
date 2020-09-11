@@ -6,9 +6,10 @@ const Realm = require('realm');
 const output = require('../helper/output');
 const { deleteRecursive } = require('./../helper/folder');
 
+const kyoto = require('./../city/kyoto');
 const tokyo = require('./../city/tokyo');
 
-const folder = process.env.REALM_DB_BUILD_FOLDER;
+const folder = process.env.BUILD_FOLDER + process.env.REALM_DB_BUILD_FOLDER;
 const dbFiles = [
   `${process.env.REALM_DB_BUILD_NAME}.realm`,
   `${process.env.REALM_DB_BUILD_NAME}.realm.lock`,
@@ -20,7 +21,7 @@ const schema = {
   name: 'Shelter',
   primaryKey: 'id',
   properties: {
-    id: 'int',
+    id: 'string',
     type: 'int',
     code: 'string',
     name: 'string',
@@ -47,8 +48,12 @@ const build = async (cities) => {
     let sheltersNew = [];
   
     switch (city) {
+      case 'kyoto':
+        sheltersNew = await kyoto();
+        break;
       case 'tokyo':
         sheltersNew = await tokyo();
+        break;
     }
   
     shelters = shelters.concat(sheltersNew);
