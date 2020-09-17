@@ -1424,10 +1424,10 @@ readable-stream@^2.0.6, readable-stream@^2.2.2:
     string_decoder "~1.1.1"
     util-deprecate "~1.0.1"
 
-realm@^6.0.2:
-  version "6.0.4"
-  resolved "https://registry.yarnpkg.com/realm/-/realm-6.0.4.tgz#cb5171c8a2f4641bd5ccf6ed1e314b2021e2b669"
-  integrity sha512-hrXBOXjjX97etVVdzysONdcdCjj9wyCRxJHWLTykU760FoTz719+bC9T7a+DdGxxfeZNn0tND3xYdOBId5YJhA==
+realm@^6.1.1:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/realm/-/realm-6.1.1.tgz#7765d4671affc2a75779fc5826e668b3aaf563e9"
+  integrity sha512-/GxH8oQWrsKHx1mcuScXhyPzNjFRRf+q5ET/fqkgugZGRLnIC54SItflHnh7RNEblkxqDD40wuuPX/U5+2defA==
   dependencies:
     command-line-args "^4.0.6"
     deepmerge "2.1.0"
