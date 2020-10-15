@@ -1,7 +1,8 @@
 # scripts
 
-Build shelter database:
+Build the shelter database:
 
 ```sh
-$ yarn build
+$ yarn install
+$ yarn start
 ```
