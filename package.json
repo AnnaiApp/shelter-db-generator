@@ -10,7 +10,8 @@
     "dotenv": "^8.2.0",
     "prompts": "^2.3.2",
     "realm": "^6.1.1",
-    "xlsx": "^0.16.6"
+    "xlsx": "^0.16.6",
+    "yargs": "^16.1.0"
   },
   "devDependencies": {
     "eslint": "^7.8.1"
