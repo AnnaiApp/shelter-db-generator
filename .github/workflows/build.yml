@@ -24,9 +24,9 @@ jobs:
     - name: Build the Realm database
       run: yarn start --all --dbtype realm
     - name: Remove unused files from the build folder
-      run: rm -rf build/shelters.realm.{management,lock,note}
+      run: rm -rf build/realm/shelters.realm.{management,lock,note}
     - name: Upload the database
       uses: actions/upload-artifact@v2
       with:
         name: shelters-all
-        path: build
+        path: build/realm
