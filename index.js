@@ -8,23 +8,23 @@ const { build: buildRealm } = require('./src/db/realm');
 const DB_TYPE_REALM = 'realm';
 
 (async () => {
-  const argv = yargs
-    .option('dbtype', {
-      alias: 't',
-      description: 'the database type to generate',
-      choices: [DB_TYPE_REALM],
-      type: 'string',
-    })
-    .option('all', {
-      alias: 'a',
-      description: 'Generate a database for all available cities',
-      type: 'boolean',
-    })
-    .help()
-    .alias('help', 'h')
-    .argv;
-
-  prompts.override(yargs.argv);
+  prompts.override(
+    yargs
+      .option('dbtype', {
+        alias: 't',
+        description: 'the database type to generate',
+        choices: [DB_TYPE_REALM],
+        type: 'string'
+      })
+      .option('all', {
+        alias: 'a',
+        description: 'Generate a database for all available cities',
+        type: 'boolean'
+      })
+      .help()
+      .alias('help', 'h')
+      .argv
+  );
 
   let questions = [{
     type: 'select',
