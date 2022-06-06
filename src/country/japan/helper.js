@@ -4,26 +4,51 @@ const Axios = require('axios');
 const AdmZip = require('adm-zip');
 const xlsx = require('xlsx');
 
-const { BASE_URL, PREFECTURE, BASE_EXTENSION, DATA_EXTENSION } = require('./const.js');
+const { REQUEST_URL, REQUEST_EXTENSION, FILE_PREFIX, FILE_SUFFIX, FILE_EXTENSION, SHEET_NAME, PREFECTURES } = require('./const.js');
 
-const url = `${BASE_URL}${PREFECTURE.HOKKAIDOU}${BASE_EXTENSION}`
-const filename = `${PREFECTURE.HOKKAIDOU}${DATA_EXTENSION}`
+const getAllPrefectures = () => Object.keys(PREFECTURES).map(key => PREFECTURES[key]);
 
-const request = async () => {
-  const body = await Axios.get(url, { responseType: 'arraybuffer' });
-
-  const zip = new AdmZip(body.data);
-  const entry = zip.getEntry(filename)
-
-  const xlsData = xlsx.read(entry.getData());
-
-  let data = [];
-  for (const sheet of xlsData.SheetNames) {
-    const sheetData = xlsx.utils.sheet_to_json(xlsData.Sheets[sheet]);
-    data = data.concat(sheetData);
-  }
-  console.log(data)
-  return data
+const generateRequestUrl = (prefecture) => {
+  return `${REQUEST_URL}${FILE_PREFIX}${prefecture[0]}${FILE_SUFFIX}${REQUEST_EXTENSION}`;
 }
 
-module.exports = request;
+const generateFilePath = (prefecture) => {
+  const filePath = prefecture[1] ? `${FILE_PREFIX}${prefecture[0]}${FILE_SUFFIX}/` : '';
+  return filePath + `${FILE_PREFIX}${prefecture[0]}${FILE_EXTENSION}`;
+}
+
+const request = async (prefectures) => {
+  const responses = await Promise.all(prefectures.map(prefecture => Axios.get(generateRequestUrl(prefecture), { responseType: 'arraybuffer' })));
+
+  let rawShelters = [];
+
+  for (let index = 0; index < responses.length; index++) {
+    const zip = new AdmZip(responses[index].data);
+    const entry = zip.getEntry(generateFilePath(prefectures[index]));
+
+    console.log(prefectures[index], index)
+
+    const xlsData = xlsx.read(entry.getData());
+    rawShelters = rawShelters.concat(xlsx.utils.sheet_to_json(xlsData.Sheets[SHEET_NAME]));
+  }
+  
+  return rawShelters;
+}
+
+const format = (rawShelters) => rawShelters.map(rawShelter => {
+  return {
+      id: `japan-${rawShelter['NO']}`,
+      type: rawShelter['P20_004'],
+      name: rawShelter['P20_002'],
+      subname: '',
+      address: rawShelter['P20_003'],
+      latitude: rawShelter['緯度'],
+      longitude: rawShelter['経度']
+    }
+  });
+
+module.exports = {
+  getAllPrefectures,
+  request,
+  format
+};
