@@ -7,6 +7,8 @@
     "lint": "npx eslint ."
   },
   "dependencies": {
+    "adm-zip": "^0.5.9",
+    "axios": "^0.27.2",
     "dotenv": "^8.2.0",
     "prompts": "^2.3.2",
     "realm": "^6.1.1",
