@@ -1,0 +1,32 @@
+name: Build the database
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '*.md'
+  pull_request:
+    branches:
+      - master
+    paths-ignore:
+      - '*.md'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    - name: Install the dependencies
+      run: yarn install
+    - name: Build the Realm database
+      run: yarn start --all --dbtype realm
+    - name: Remove unused files from the build folder
+      run: rm -rf build/realm/shelters.realm.{management,lock,note}
+    - name: Upload the database
+      uses: actions/upload-artifact@v3
+      with:
+        name: shelters-all
+        path: build/realm
