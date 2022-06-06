@@ -14,11 +14,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Use Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
-        node-version: '14.x'
+        node-version: 18
     - name: Install the dependencies
       run: yarn install
     - name: Build the Realm database
@@ -26,7 +26,7 @@ jobs:
     - name: Remove unused files from the build folder
       run: rm -rf build/realm/shelters.realm.{management,lock,note}
     - name: Upload the database
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: shelters-all
         path: build/realm
